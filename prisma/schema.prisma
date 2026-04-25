@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String?
+  name      String?
+  phone     String?
+  address   String?
+  role      Role     @default(USER)
+  userType  UserType @default(REGISTERED)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+  @@map("users")
+}
+
+model Rider {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String
+  available Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  orders    Order[]
+  @@map("riders")
+}
+
+model MenuItem {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  price       Float
+  category    String
+  image       String?
+  available   Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+  @@map("menu_items")
+}
+
+model DeliveryArea {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  deliveryFee Float
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@map("delivery_areas")
+}
+
+model Deal {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  description        String
+  originalPrice      Float
+  discountedPrice    Float
+  discountPercentage Int
+  image              String?
+  items              String[]
+  available          Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  @@map("deals")
+}
+
+model Order {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String      @db.ObjectId
+  riderId       String?     @db.ObjectId
+  status        OrderStatus @default(PENDING)
+  paymentMethod String      @default("COD")
+  total         Float
+  deliveryFee   Float       @default(0)
+  address       String
+  area          String?
+  phone         String
+  customerName  String?
+  notes         String?
+  isGuest       Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  user          User        @relation(fields: [userId], references: [id])
+  rider         Rider?      @relation(fields: [riderId], references: [id])
+  items         OrderItem[]
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId    String   @db.ObjectId
+  menuItemId String   @db.ObjectId
+  quantity   Int
+  price      Float
+  order      Order    @relation(fields: [orderId], references: [id])
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  @@map("order_items")
+}
+
+enum Role {
+  USER
+  ADMIN
+  RIDER
+}
+
+enum UserType {
+  REGISTERED
+  GUEST
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
