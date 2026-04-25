@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import { AdminLayout } from '@/components/admin-layout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,15 +17,16 @@ interface Rider {
 }
 
 export default function AdminRidersPage() {
+  const { data: session } = useSession()
   const [riders, setRiders] = useState<Rider[]>([])
   const [loading, setLoading] = useState(true)
   const [form, setForm] = useState({ name: '', phone: '' })
   const [adding, setAdding] = useState(false)
 
   useEffect(() => {
-    if (state.user?.email === 'admin@pizza1981.com' || state.isAdmin) fetchRiders()
+    if (session?.user?.email === 'admin@pizza1981.com' || session?.user?.role === 'ADMIN') fetchRiders()
     else setLoading(false)
-  }, [state.user])
+  }, [session])
 
   const fetchRiders = async () => {
     setLoading(true)
@@ -62,7 +64,7 @@ export default function AdminRidersPage() {
     fetchRiders()
   }
 
-  if (!state.isAdmin && state.user?.email !== 'admin@pizza1981.com') {
+  if (session?.user?.role !== 'ADMIN' && session?.user?.email !== 'admin@pizza1981.com') {
     return <AdminLayout><div className="p-8 text-center text-gray-400">Access denied</div></AdminLayout>
   }
 

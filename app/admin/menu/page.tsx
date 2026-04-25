@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import { AdminLayout } from '@/components/admin-layout'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -21,9 +22,11 @@ interface MenuItem {
 }
 
 export default function AdminMenuPage() {
+  const { data: session } = useSession()
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [isAddingItem, setIsAddingItem] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [newItem, setNewItem] = useState({
@@ -35,13 +38,13 @@ export default function AdminMenuPage() {
   })
 
   useEffect(() => {
-    if (state.user?.email === 'admin@pizza1981.com' || state.isAdmin) {
+    if (session?.user?.email === 'admin@pizza1981.com' || session?.user?.role === 'ADMIN') {
       setIsAdmin(true)
       fetchMenuItems()
     } else {
       setLoading(false)
     }
-  }, [state.user, state.isAdmin])
+  }, [session])
 
   const fetchMenuItems = async () => {
     try {

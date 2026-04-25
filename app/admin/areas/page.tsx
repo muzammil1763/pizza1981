@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import { AdminLayout } from '@/components/admin-layout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,6 +11,7 @@ import { Plus, Trash2, Pencil, Check, X, MapPin } from 'lucide-react'
 interface Area { id: string; name: string; deliveryFee: number; active: boolean }
 
 export default function AdminAreasPage() {
+  const { data: session } = useSession()
   const [areas, setAreas] = useState<Area[]>([])
   const [loading, setLoading] = useState(true)
   const [form, setForm] = useState({ name: '', deliveryFee: '' })
@@ -18,9 +20,9 @@ export default function AdminAreasPage() {
   const [editForm, setEditForm] = useState({ name: '', deliveryFee: '' })
 
   useEffect(() => {
-    if (state.user?.email === 'admin@pizza1981.com' || state.isAdmin) fetchAreas()
+    if (session?.user?.email === 'admin@pizza1981.com' || session?.user?.role === 'ADMIN') fetchAreas()
     else setLoading(false)
-  }, [state.user])
+  }, [session])
 
   const fetchAreas = async () => {
     setLoading(true)
@@ -73,7 +75,7 @@ export default function AdminAreasPage() {
     fetchAreas()
   }
 
-  if (!state.isAdmin && state.user?.email !== 'admin@pizza1981.com') {
+  if (session?.user?.role !== 'ADMIN' && session?.user?.email !== 'admin@pizza1981.com') {
     return <AdminLayout><div className="p-8 text-center text-gray-400">Access denied</div></AdminLayout>
   }
 

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import { AdminLayout } from '@/components/admin-layout'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -27,15 +28,16 @@ const STATUS_COLORS: Record<string, string> = {
 }
 
 export default function AdminOrdersPage() {
+  const { data: session } = useSession()
   const [orders, setOrders] = useState<Order[]>([])
   const [riders, setRiders] = useState<Rider[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (state.user?.email === 'admin@pizza1981.com' || state.isAdmin) {
+    if (session?.user?.email === 'admin@pizza1981.com' || session?.user?.role === 'ADMIN') {
       fetchOrders(); fetchRiders()
     } else setLoading(false)
-  }, [state.user, state.isAdmin])
+  }, [session])
 
   const fetchOrders = async () => {
     const res = await fetch('/api/admin/orders')
@@ -69,7 +71,7 @@ export default function AdminOrdersPage() {
     })
   }
 
-  if (!state.isAdmin && state.user?.email !== 'admin@pizza1981.com') {
+  if (session?.user?.role !== 'ADMIN' && session?.user?.email !== 'admin@pizza1981.com') {
     return <AdminLayout><div className="p-8 text-center text-gray-400">Access denied</div></AdminLayout>
   }
 

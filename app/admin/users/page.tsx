@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import { AdminLayout } from '@/components/admin-layout'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -24,18 +25,20 @@ interface User {
 }
 
 export default function AdminUsersPage() {
+  const { data: session } = useSession()
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
-    if (state.user?.email === 'admin@pizza1981.com' || state.isAdmin) {
+    if (session?.user?.email === 'admin@pizza1981.com' || session?.user?.role === 'ADMIN') {
       setIsAdmin(true)
       fetchUsers()
     } else {
       setLoading(false)
     }
-  }, [state.user, state.isAdmin])
+  }, [session])
 
   const fetchUsers = async () => {
     try {

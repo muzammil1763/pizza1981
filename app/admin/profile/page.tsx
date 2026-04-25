@@ -44,7 +44,7 @@ export default function AdminProfilePage() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: state.user?.id,
+          userId: session?.user?.id,
           ...formData,
         }),
       })
@@ -57,7 +57,6 @@ export default function AdminProfilePage() {
         return
       }
 
-      setUser(data.user)
       setMessage('Profile updated successfully!')
       setTimeout(() => setMessage(''), 3000)
     } catch (err) {
@@ -67,7 +66,7 @@ export default function AdminProfilePage() {
     }
   }
 
-  if (!state.isLoggedIn || !state.isAdmin) {
+  if (!session || (session.user?.role !== 'ADMIN' && session.user?.email !== 'admin@pizza1981.com')) {
     return null
   }
 
@@ -98,7 +97,7 @@ export default function AdminProfilePage() {
               </label>
               <Input
                 type="email"
-                value={state.user?.email || ''}
+                value={session?.user?.email || ''}
                 disabled
                 className="mt-1 rounded-xl border-gray-200 bg-gray-50"
               />
