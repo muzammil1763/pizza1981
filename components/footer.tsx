@@ -6,12 +6,12 @@ import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Twitter, Youtube } fro
 
 export function Footer() {
   return (
-    <footer className="relative bg-[#93a9a6] text-white mt-0">
+    <footer className="relative bg-[#0d1b2a] text-white mt-0">
 
       {/* ── Wavy top edge ── */}
       <div className="relative w-full overflow-hidden leading-none" style={{ height: 90 }}>
         <svg viewBox="0 0 1440 90" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
-          <rect width="1440" height="90" fill="#93a9a6" />
+          <rect width="1440" height="90" fill="#0d1b2a" />
           <path d="M0,0 L0,50 C180,95 360,5 540,50 C720,95 900,5 1080,50 C1260,95 1380,20 1440,50 L1440,0 Z" fill="#ffffff" />
         </svg>
       </div>

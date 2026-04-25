@@ -37,8 +37,8 @@ export default function ContactPage() {
       <Navbar />
 
       {/* ── Hero banner ── */}
-      <section className="relative py-16 px-6 overflow-hidden">
-        <div className="absolute inset-0">
+      <section className="relative py-24 px-6 overflow-hidden bg-[#0d1b2a]">
+        <div className="absolute inset-0 opacity-20">
           <Image src="/pizza-banner-2.png" alt="Hero" fill className="object-cover" priority />
         </div>
         <span className="absolute top-4 right-[10%] text-3xl opacity-20 select-none">🍕</span>

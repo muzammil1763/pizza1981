@@ -68,13 +68,7 @@ const posts = [
 
 const categories = ['All', 'Recipes', 'Healthy Eating', 'Food Culture'];
 
-const WaveDown = ({ fill }: { fill: string }) => (
-  <div className="absolute bottom-0 left-0 right-0 leading-none">
-    <svg viewBox="0 0 1440 90" preserveAspectRatio="none" className="w-full h-[90px] block">
-      <path d="M0,45 C180,90 360,0 540,45 C720,90 900,0 1080,45 C1260,90 1380,20 1440,45 L1440,90 L0,90 Z" fill={fill} />
-    </svg>
-  </div>
-);
+
 
 export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState('All');
@@ -91,10 +85,9 @@ export default function BlogPage() {
       <Navbar />
 
       {/* ── Hero banner ── */}
-      <section className="relative py-20 px-6 overflow-hidden">
-        <div className="absolute inset-0">
+      <section className="relative py-24 px-6 overflow-hidden bg-[#0d1b2a]">
+        <div className="absolute inset-0 opacity-20">
           <Image src="/pizza-banner-2.png" alt="Blog Hero" fill className="object-cover" priority />
-          <div className="absolute inset-0 bg-[#1e3a5f]/70" />
         </div>
         <div className="max-w-3xl mx-auto text-center relative z-10">
           <Badge className="bg-[#f5a623]/20 text-[#f5a623] border-[#f5a623]/30 mb-4 px-4 py-1.5 text-sm font-medium">
@@ -166,14 +159,8 @@ export default function BlogPage() {
       </section>
 
       {/* ── Post grid ── navy section */}
-      <section className="relative py-20 px-6 bg-[#1e3a5f]">
-        <div className="absolute top-0 left-0 right-0 leading-none">
-          <svg viewBox="0 0 1440 90" preserveAspectRatio="none" className="w-full h-[90px] block">
-            <path d="M0,45 C180,0 360,90 540,45 C720,0 900,90 1080,45 C1260,0 1380,70 1440,45 L1440,0 L0,0 Z" fill="#ffffff" />
-          </svg>
-        </div>
-
-        <div className="max-w-7xl mx-auto pt-16">
+      <section className="relative py-32 px-6 bg-[#1e3a5f]" style={{ backgroundImage: 'url(/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-extrabold text-white mb-10 text-center">
             Latest <span className="text-[#f5a623]">Articles</span>
             <span className="text-[#8a9bb0] text-lg font-normal ml-3">({filtered.length})</span>
@@ -214,12 +201,6 @@ export default function BlogPage() {
               Load More Articles
             </Button>
           </div>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0 leading-none">
-          <svg viewBox="0 0 1440 90" preserveAspectRatio="none" className="w-full h-[90px] block">
-            <path d="M0,45 C180,90 360,0 540,45 C720,90 900,0 1080,45 C1260,90 1380,20 1440,45 L1440,90 L0,90 Z" fill="#ffffff" />
-          </svg>
         </div>
       </section>
 

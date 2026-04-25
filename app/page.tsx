@@ -49,37 +49,53 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex items-center px-6 overflow-hidden bg-white">
-        <div className="absolute inset-0">
+      <section className="relative min-h-[92vh] flex items-center px-6 overflow-hidden bg-[#0d1b2a]">
+        <div className="absolute inset-0 opacity-30">
           <Image src="/banner-bg-1.png" alt="Hero Banner" fill className="object-cover" priority />
         </div>
+        {/* Decorative food icons */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 opacity-20">
+            <Image src="/pizza-banner-1.png" alt="" width={80} height={80} className="animate-pulse" />
+          </div>
+          <div className="absolute bottom-32 left-20 opacity-20">
+            <Image src="/pizza-banner-2.png" alt="" width={60} height={60} className="animate-bounce" />
+          </div>
+          <div className="absolute top-40 right-20 opacity-20">
+            <span className="text-6xl">🍃</span>
+          </div>
+          <div className="absolute bottom-40 right-32 opacity-20">
+            <span className="text-7xl">🍃</span>
+          </div>
+        </div>
+        
         <div className="max-w-7xl mx-auto w-full relative z-10 py-20">
-          <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-2 bg-[#f5a623]/20 text-[#f5a623] text-xs font-bold px-4 py-2 rounded-full mb-5 uppercase tracking-widest">
-              <Zap size={12} className="fill-[#f5a623]" /> Since 1981 — The Taste Expert
-            </span>
-            <h1 className="text-5xl md:text-7xl font-extrabold text-[#1e3a5f] leading-tight mb-6">
-              Lahore ka<br /><span className="text-[#f5a623]">Sabse Pyara</span><br />Restaurant
+          <div className="max-w-3xl text-center mx-auto">
+            <h1 className="text-6xl md:text-8xl font-extrabold text-white leading-tight mb-6">
+              QUALITY <span className="text-[#f5a623]">FOODS</span>
             </h1>
-            <p className="text-[#2c3e50] text-lg leading-relaxed mb-8 max-w-lg font-semibold">
-              Handcrafted pizzas, crispy burgers, juicy shawarmas and more — made fresh daily and delivered hot to your door across 54+ areas in Lahore.
+            <p className="text-[#f5a623] text-xl md:text-2xl font-semibold tracking-[0.3em] uppercase mb-12">
+              HEALTHY FOOD FOR HEALTHY BODY
             </p>
-            <div className="flex flex-wrap gap-3 mb-10">
-              <Button asChild className="bg-[#f5a623] hover:bg-[#e09510] text-white rounded-full px-8 py-5 font-bold shadow-lg shadow-[#f5a623]/30 transition-all text-base">
-                <Link href="/menu">Order Now <ArrowRight size={16} className="ml-1" /></Link>
-              </Button>
-              <Button asChild variant="outline" className="border-2 border-[#1e3a5f] text-[#1e3a5f] hover:bg-[#1e3a5f] hover:text-white rounded-full px-8 py-5 font-semibold transition-all text-base bg-white/90">
-                <Link href="/deals">Hot Deals 🔥</Link>
-              </Button>
-            </div>
-            {/* Quick stats */}
-            <div className="flex flex-wrap gap-6">
-              {[['50k+','Happy Customers'],['30 min','Avg Delivery'],['4.9★','Rating'],['54+','Areas']].map(([v,l]) => (
-                <div key={l}>
-                  <p className="text-[#f5a623] font-extrabold text-xl">{v}</p>
-                  <p className="text-[#1e3a5f] text-xs font-bold">{l}</p>
+            
+            {/* Pizza Image */}
+            <div className="relative w-full max-w-2xl mx-auto mb-12">
+              <div className="relative aspect-square">
+                <Image 
+                  src="/pizza-banner-1.png" 
+                  alt="Delicious Pizza" 
+                  fill 
+                  className="object-contain drop-shadow-2xl"
+                  priority
+                />
+                {/* Floating basil leaves */}
+                <div className="absolute -left-10 top-20 animate-float">
+                  <span className="text-5xl">🌿</span>
                 </div>
-              ))}
+                <div className="absolute -right-10 top-32 animate-float-delayed">
+                  <span className="text-6xl">🌿</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -116,8 +132,7 @@ export default function HomePage() {
       </section>
 
       {/* ── WHY US ── navy ───────────────────────────────────────────────── */}
-      <section className="relative py-20 px-6 bg-[#1e3a5f]">
-        <WaveUp fill="#ffffff" />
+      <section className="relative py-32 px-6 bg-[#1e3a5f]" style={{ backgroundImage: 'url(/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="max-w-7xl mx-auto pt-8">
           <div className="text-center mb-12">
             <span className="inline-flex items-center gap-2 bg-[#f5a623]/15 text-[#f5a623] text-sm font-semibold px-4 py-2 rounded-full mb-4">
@@ -140,7 +155,6 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-        <WaveDown fill="#ffffff" />
       </section>
 
       {/* ── BESTSELLERS ── white ─────────────────────────────────────────── */}
@@ -185,8 +199,7 @@ export default function HomePage() {
       </section>
 
       {/* ── HOT DEALS BANNER ── navy ─────────────────────────────────────── */}
-      <section className="relative py-20 px-6 bg-[#1e3a5f]">
-        <WaveUp fill="#ffffff" />
+      <section className="relative py-32 px-6 bg-[#1e3a5f]" style={{ backgroundImage: 'url(/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="max-w-7xl mx-auto pt-8">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -227,7 +240,6 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <WaveDown fill="#ffffff" />
       </section>
 
       {/* ── HOW IT WORKS ── white ────────────────────────────────────────── */}
@@ -265,8 +277,7 @@ export default function HomePage() {
       </section>
 
       {/* ── CUSTOMER REVIEWS ── navy ─────────────────────────────────────── */}
-      <section className="relative py-24 px-6 bg-[#1e3a5f]">
-        <WaveUp fill="#ffffff" />
+      <section className="relative py-32 px-6 bg-[#1e3a5f]" style={{ backgroundImage: 'url(/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="max-w-7xl mx-auto pt-8">
           <div className="text-center mb-12">
             <span className="inline-flex items-center gap-2 bg-[#f5a623]/15 text-[#f5a623] text-sm font-semibold px-4 py-2 rounded-full mb-4">
@@ -305,7 +316,6 @@ export default function HomePage() {
             <p className="text-[#8a9bb0]">Based on 50,000+ orders across Lahore</p>
           </div>
         </div>
-        <WaveDown fill="#ffffff" />
       </section>
 
       {/* ── PIZZA PROMO ── white ─────────────────────────────────────────── */}
@@ -348,8 +358,7 @@ export default function HomePage() {
       </section>
 
       {/* ── NEWSLETTER ── navy ───────────────────────────────────────────── */}
-      <section className="relative py-24 px-6 bg-[#1e3a5f] overflow-hidden">
-        <WaveUp fill="#ffffff" />
+      <section className="relative py-32 px-6 bg-[#1e3a5f] overflow-hidden" style={{ backgroundImage: 'url(/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="max-w-4xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10 pt-8">
           <div>
             <span className="inline-block bg-[#f5a623]/15 text-[#f5a623] text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wide">Stay Updated</span>
@@ -370,7 +379,6 @@ export default function HomePage() {
             <span className="text-[120px] leading-none select-none">👩‍🍳</span>
           </div>
         </div>
-        <WaveDown fill="#ffffff" />
       </section>
 
       <Footer />

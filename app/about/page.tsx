@@ -31,21 +31,7 @@ const values = [
   { icon: <Users size={28} className="text-[#f5a623]" />,  title: 'Community First',   desc: 'Lahore ke local farmers se ingredients lete hain aur community mein invest karte hain.' },
 ];
 
-const WaveDown = ({ fill }: { fill: string }) => (
-  <div className="absolute bottom-0 left-0 right-0 leading-none">
-    <svg viewBox="0 0 1440 90" preserveAspectRatio="none" className="w-full h-[90px] block">
-      <path d="M0,45 C180,90 360,0 540,45 C720,90 900,0 1080,45 C1260,90 1380,20 1440,45 L1440,90 L0,90 Z" fill={fill} />
-    </svg>
-  </div>
-);
 
-const WaveUp = ({ fill }: { fill: string }) => (
-  <div className="absolute top-0 left-0 right-0 leading-none">
-    <svg viewBox="0 0 1440 90" preserveAspectRatio="none" className="w-full h-[90px] block">
-      <path d="M0,45 C180,0 360,90 540,45 C720,0 900,90 1080,45 C1260,0 1380,70 1440,45 L1440,0 L0,0 Z" fill={fill} />
-    </svg>
-  </div>
-);
 
 export default function AboutPage() {
   return (
@@ -53,8 +39,8 @@ export default function AboutPage() {
       <Navbar />
 
       {/* ── Hero ── */}
-      <section className="relative py-16 px-6 overflow-hidden">
-        <div className="absolute inset-0">
+      <section className="relative py-24 px-6 overflow-hidden bg-[#0d1b2a]">
+        <div className="absolute inset-0 opacity-20">
           <Image src="/pizza-banner-1.png" alt="Hero" fill className="object-cover" priority />
         </div>
         <span className="absolute top-4 right-[10%] text-3xl opacity-20 select-none rotate-12">🥬</span>
@@ -112,8 +98,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Stats ── navy */}
-      <section className="relative pt-28 pb-28 px-6 bg-[#1e3a5f]">
-        <WaveUp fill="#ffffff" />
+      <section className="relative py-40 px-6 bg-[#1e3a5f]" style={{ backgroundImage: 'url(/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 text-center">
           {stats.map((s) => (
             <div key={s.label} className="bg-white/5 rounded-3xl py-10 px-4 hover:bg-white/10 transition-colors">
@@ -123,11 +108,10 @@ export default function AboutPage() {
             </div>
           ))}
         </div>
-        <WaveDown fill="#ffffff" />
       </section>
 
       {/* ── Values ── white */}
-      <section className="relative pt-28 pb-28 px-6 bg-white overflow-hidden">
+      <section className="relative py-20 px-6 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-12">
             <Badge className="bg-[#f5a623]/15 text-[#f5a623] border-[#f5a623]/30 mb-4 px-4 py-1.5 text-sm font-medium">
@@ -147,12 +131,10 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-        <WaveDown fill="#1e3a5f" />
       </section>
 
       {/* ── Team ── navy */}
-      <section className="relative py-20 px-6 bg-[#1e3a5f]">
-        <WaveUp fill="#1e3a5f" />
+      <section className="relative py-32 px-6 bg-[#1e3a5f]" style={{ backgroundImage: 'url(/bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <Badge className="bg-[#f5a623]/15 text-[#f5a623] border-[#f5a623]/30 mb-4 px-4 py-1.5 text-sm font-medium">
@@ -173,15 +155,13 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-
       </section>
 
-      {/* ── CTA ── navy */}
-      <section className="relative pt-28 pb-28 px-6 bg-[#1e3a5f] text-white text-center">
-        <WaveUp fill="#1e3a5f" />
+      {/* ── CTA ── white */}
+      <section className="relative py-40 px-6 bg-white text-center">
         <div className="max-w-2xl mx-auto relative z-10">
           <span className="text-7xl mb-6 block select-none">🚀</span>
-          <h2 className="text-4xl font-extrabold mb-5">
+          <h2 className="text-4xl font-extrabold mb-5 text-[#1e3a5f]">
             Ready to <span className="text-[#f5a623]">Order?</span>
           </h2>
           <p className="text-[#8a9bb0] leading-relaxed mb-8">
@@ -191,12 +171,11 @@ export default function AboutPage() {
             <Button asChild className="bg-[#f5a623] hover:bg-[#e09510] text-white rounded-full px-8 py-4 font-semibold shadow-lg shadow-[#f5a623]/30">
               <Link href="/menu">Order Now <ArrowRight size={16} className="ml-1" /></Link>
             </Button>
-            <Button asChild className="border-2 border-[#8a9bb0]/40 bg-transparent text-white hover:bg-white/10 rounded-full px-8 py-4 font-semibold">
+            <Button asChild className="border-2 border-[#8a9bb0]/40 bg-transparent text-[#1e3a5f] hover:bg-[#1e3a5f] hover:text-white rounded-full px-8 py-4 font-semibold">
               <Link href="/contact">Contact Us</Link>
             </Button>
           </div>
         </div>
-        <WaveDown fill="#ffffff" />
       </section>
 
       <Footer />
