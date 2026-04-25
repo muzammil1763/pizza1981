@@ -51,7 +51,7 @@ export function Navbar() {
           {/* Right Actions */}
           <div className="flex items-center gap-4">
             {/* Cart Icon with Badge */}
-            <Link href="/checkout" className="relative p-2 hover:bg-white/20 rounded-full transition">
+            <Link href="/cart" className="relative p-2 hover:bg-white/20 rounded-full transition">
               <ShoppingCart size={20} className="text-white" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#f5a623] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">

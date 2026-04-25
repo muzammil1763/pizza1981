@@ -9,6 +9,7 @@ import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
+import { showAlert } from '@/components/ui/confirm-dialog'
 import { PIZZA_1981_MENU } from '@/lib/menu-data'
 import { formatPrice } from '@/lib/utils-app'
 import { ArrowLeft, MapPin, Phone, User, CreditCard, ChevronDown, Search, Locate, ShoppingBag } from 'lucide-react'
@@ -70,18 +71,18 @@ export default function CheckoutPage() {
       () => {
         // In production, reverse geocode to get area. For now just show a message.
         setLocating(false)
-        alert('Live location detected. Please select your area from the list.')
+        showAlert('Live location detected. Please select your area from the list.')
       },
       () => {
         setLocating(false)
-        alert('Could not get location. Please select your area manually.')
+        showAlert('Could not get location. Please select your area manually.')
       }
     )
   }
 
   const handlePlaceOrder = async () => {
     if (!form.name || !form.phone || !form.area || !form.address) {
-      alert('Please fill in all required fields (Name, Phone, Area, Address)')
+      showAlert('Please fill in all required fields (Name, Phone, Area, Address)')
       return
     }
     if (cartItems.length === 0) return
@@ -131,7 +132,7 @@ export default function CheckoutPage() {
       clearCart()
       router.push(`/order-confirmation/${order.id}`)
     } catch (err) {
-      alert('Failed to place order. Please try again.')
+      showAlert('Failed to place order. Please try again.')
     } finally {
       setIsProcessing(false)
     }
@@ -161,7 +162,7 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen bg-white flex flex-col">
         <Navbar />
-        <main className="flex-1 flex items-center justify-center p-8">
+        <main className="flex-1 flex items-center justify-center p-8 pt-32">
           <div className="w-full max-w-md">
             <h1 className="text-3xl font-extrabold text-[#1e3a5f] text-center mb-2">How would you like to order?</h1>
             <p className="text-gray-400 text-center mb-8 text-sm">Login for faster checkout with saved info, or continue as guest</p>
@@ -187,7 +188,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
-      <main className="flex-1 px-4 py-10">
+      <main className="flex-1 px-4 py-10 pt-32">
         <div className="max-w-5xl mx-auto">
           <Link href="/menu" className="flex items-center gap-2 text-[#1e3a5f] mb-6 hover:opacity-70 text-sm font-medium">
             <ArrowLeft size={16} /> Back to Menu

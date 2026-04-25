@@ -3,6 +3,7 @@
 import { SessionProvider } from 'next-auth/react';
 import { AppProvider } from '@/lib/app-context';
 import { Toaster } from 'sonner';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -10,6 +11,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <AppProvider>
         {children}
         <Toaster position="top-right" richColors />
+        <ConfirmDialog />
       </AppProvider>
     </SessionProvider>
   );

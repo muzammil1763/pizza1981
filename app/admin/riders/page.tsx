@@ -6,6 +6,7 @@ import { AdminLayout } from '@/components/admin-layout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
+import { showConfirm } from '@/components/ui/confirm-dialog'
 import { Plus, Trash2, Phone, User, CheckCircle, XCircle } from 'lucide-react'
 
 interface Rider {
@@ -59,9 +60,10 @@ export default function AdminRidersPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this rider?')) return
-    await fetch(`/api/admin/riders/${id}`, { method: 'DELETE' })
-    fetchRiders()
+    showConfirm('Delete this rider?', async () => {
+      await fetch(`/api/admin/riders/${id}`, { method: 'DELETE' })
+      fetchRiders()
+    });
   }
 
   if (session?.user?.role !== 'ADMIN' && session?.user?.email !== 'admin@pizza1981.com') {

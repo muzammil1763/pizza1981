@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { showConfirm, showAlert } from '@/components/ui/confirm-dialog';
 import { Plus, Edit, Trash2, Tag, TrendingDown, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
 import Image from 'next/image';
@@ -166,19 +167,19 @@ export default function AdminDealsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this deal?')) return;
-
-    try {
-      const res = await fetch(`/api/admin/deals/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        toast.success('Deal deleted successfully');
-        fetchDeals();
-      } else {
-        toast.error('Failed to delete deal');
+    showConfirm('Are you sure you want to delete this deal?', async () => {
+      try {
+        const res = await fetch(`/api/admin/deals/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          toast.success('Deal deleted successfully');
+          fetchDeals();
+        } else {
+          toast.error('Failed to delete deal');
+        }
+      } catch (error) {
+        toast.error('An error occurred');
       }
-    } catch (error) {
-      toast.error('An error occurred');
-    }
+    });
   };
 
   const resetForm = () => {

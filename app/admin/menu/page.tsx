@@ -7,6 +7,7 @@ import { AdminLayout } from '@/components/admin-layout'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { showAlert } from '@/components/ui/confirm-dialog'
 import { Plus, Edit2, Trash2, Upload, Image as ImageIcon } from 'lucide-react'
 
 interface MenuItem {
@@ -85,7 +86,7 @@ export default function AdminMenuPage() {
       setNewItem({ ...newItem, image: data.url })
     } catch (err) {
       console.error('Upload error:', err)
-      alert('Failed to upload image')
+      showAlert('Failed to upload image')
     } finally {
       setUploading(false)
     }

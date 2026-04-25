@@ -6,6 +6,7 @@ import { AdminLayout } from '@/components/admin-layout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
+import { showConfirm } from '@/components/ui/confirm-dialog'
 import { Plus, Trash2, Pencil, Check, X, MapPin } from 'lucide-react'
 
 interface Area { id: string; name: string; deliveryFee: number; active: boolean }
@@ -70,9 +71,10 @@ export default function AdminAreasPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this area?')) return
-    await fetch(`/api/admin/areas/${id}`, { method: 'DELETE' })
-    fetchAreas()
+    showConfirm('Delete this area?', async () => {
+      await fetch(`/api/admin/areas/${id}`, { method: 'DELETE' })
+      fetchAreas()
+    });
   }
 
   if (session?.user?.role !== 'ADMIN' && session?.user?.email !== 'admin@pizza1981.com') {
