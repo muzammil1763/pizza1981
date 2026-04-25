@@ -9,6 +9,14 @@ import { Button } from '@/components/ui/button';
 import { Search, Clock, User, ArrowRight, Tag } from 'lucide-react';
 import Image from 'next/image';
 
+const WaveDown = ({ fill }: { fill: string }) => (
+  <div className="absolute bottom-0 left-0 right-0 leading-none">
+    <svg viewBox="0 0 1440 90" preserveAspectRatio="none" className="w-full h-[90px] block">
+      <path d="M0,45 C180,90 360,0 540,45 C720,90 900,0 1080,45 C1260,90 1380,20 1440,45 L1440,90 L0,90 Z" fill={fill} />
+    </svg>
+  </div>
+);
+
 const posts = [
   {
     id: 1, emoji: '🍕', category: 'Recipes', featured: true,
@@ -111,6 +119,7 @@ export default function BlogPage() {
             </Button>
           </div>
         </div>
+        <WaveDown fill="#ffffff" />
       </section>
 
       {/* ── Category pills ── */}

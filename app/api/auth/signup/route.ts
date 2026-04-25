@@ -16,6 +16,45 @@ export async function POST(request: NextRequest) {
     })
 
     if (existingUser) {
+      // If existing user is a GUEST, upgrade them to REGISTERED
+      if (existingUser.userType === 'GUEST') {
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10)
+
+        // Upgrade guest to registered user
+        const upgradedUser = await prisma.user.update({
+          where: { email },
+          data: {
+            name,
+            phone,
+            password: hashedPassword,
+            userType: 'REGISTERED',
+          },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            phone: true,
+            address: true,
+            role: true,
+          },
+        })
+
+        return NextResponse.json({
+          success: true,
+          message: 'Account upgraded successfully! Your previous orders are now linked to your account.',
+          user: {
+            id: upgradedUser.id,
+            name: upgradedUser.name,
+            email: upgradedUser.email,
+            phone: upgradedUser.phone,
+            address: upgradedUser.address,
+            isAdmin: upgradedUser.role === 'ADMIN',
+          },
+        })
+      }
+
+      // If already a registered user, return error
       return NextResponse.json({ error: 'User with this email already exists' }, { status: 409 })
     }
 

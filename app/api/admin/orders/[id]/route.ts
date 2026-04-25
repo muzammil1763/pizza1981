@@ -13,7 +13,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     const updateData: any = {}
     if (status) updateData.status = status
-    if (riderId !== undefined) updateData.riderId = riderId || null
+    if (riderId !== undefined) {
+      // Convert empty string to null
+      updateData.riderId = riderId === '' || riderId === null ? null : riderId
+    }
 
     const updatedOrder = await prisma.order.update({
       where: { id: orderId },

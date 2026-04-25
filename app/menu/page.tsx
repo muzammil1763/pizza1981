@@ -1,16 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
-import { MENU_CATEGORIES, PIZZA_1981_MENU } from '@/lib/menu-data';
-import { getMenuItemsByCategory } from '@/lib/utils-app';
+import { DataLoader } from '@/components/data-loader';
 import { useApp } from '@/lib/app-context';
 import { formatPrice } from '@/lib/utils-app';
-import { MenuItem } from '@/lib/types';
 import { Search, Star, Plus, Minus, Zap, ShoppingCart } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+
+interface MenuItem {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  category: string;
+  image: string | null;
+  available: boolean;
+}
 
 const CATEGORY_EMOJI: Record<string, string> = {
   all:      '🍽️',
@@ -22,6 +29,16 @@ const CATEGORY_EMOJI: Record<string, string> = {
   paratha:  '🫓',
   deal:     '🏷️',
 };
+
+const MENU_CATEGORIES = [
+  { id: 'all', label: 'All Items' },
+  { id: 'pizza', label: 'Pizza' },
+  { id: 'burger', label: 'Burgers' },
+  { id: 'shawarma', label: 'Shawarma' },
+  { id: 'sandwich', label: 'Sandwiches' },
+  { id: 'paratha', label: 'Paratha Rolls' },
+  { id: 'fries', label: 'Fries & Drinks' },
+];
 
 function MenuItemCard({ item }: { item: MenuItem }) {
   const { addToCart } = useApp();
@@ -40,7 +57,7 @@ function MenuItemCard({ item }: { item: MenuItem }) {
           <Image src={item.image} alt={item.name} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
         ) : (
           <div className="bg-[#f5f0d8] h-full flex items-center justify-center">
-            <span className="text-7xl">{CATEGORY_EMOJI[item.category] ?? '🍽️'}</span>
+            <span className="text-7xl">{CATEGORY_EMOJI[item.category.toLowerCase()] ?? '🍽️'}</span>
           </div>
         )}
         <span className="absolute top-3 right-3 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide z-10">
@@ -59,10 +76,10 @@ function MenuItemCard({ item }: { item: MenuItem }) {
         </div>
 
         <h3 className="font-bold text-gray-800 text-base leading-snug mb-1 line-clamp-2">{item.name}</h3>
-        <p className="text-gray-400 text-xs mb-4 line-clamp-2">{item.description}</p>
+        <p className="text-gray-400 text-xs mb-4 line-clamp-2">{item.description || 'Delicious and fresh'}</p>
 
         <div className="flex items-center justify-between mb-4">
-          <span className="text-orange-500 font-extrabold text-xl">{formatPrice(item.price)}</span>
+          <span className="text-orange-500 font-extrabold text-xl">Rs. {item.price}</span>
         </div>
 
         {/* Qty + Add */}
@@ -91,17 +108,39 @@ function MenuItemCard({ item }: { item: MenuItem }) {
 export default function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredItems = getMenuItemsByCategory(selectedCategory).filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    fetchMenuItems();
+  }, []);
+
+  const fetchMenuItems = async () => {
+    try {
+      const res = await fetch('/api/menu');
+      if (res.ok) {
+        const data = await res.json();
+        setMenuItems(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch menu items:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredItems = menuItems.filter((item) => {
+    const matchesCategory = selectedCategory === 'all' || item.category.toLowerCase() === selectedCategory;
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
 
       {/* Hero Banner */}
-      <section className="pt-16 pb-14 px-6 bg-white border-b border-gray-100">
+      <section className="pt-32 pb-14 px-6 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto text-center">
           <p className="flex items-center justify-center gap-2 text-orange-500 font-semibold text-sm mb-3">
             <Zap size={14} className="fill-orange-500" /> Our Special Menu
@@ -152,7 +191,9 @@ export default function MenuPage() {
 
           {/* Products Grid — 4 columns */}
           <div className="flex-1">
-            {filteredItems.length === 0 ? (
+            {loading ? (
+              <DataLoader />
+            ) : filteredItems.length === 0 ? (
               <div className="text-center py-24 text-gray-400">
                 <span className="text-6xl block mb-4">🍽️</span>
                 <p className="text-lg font-medium">No items found</p>

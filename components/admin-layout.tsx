@@ -11,13 +11,13 @@ import {
   Users, 
   Menu as MenuIcon, 
   LayoutDashboard,
-  Settings,
   Bell,
   Search,
   ChevronLeft,
   ChevronRight,
   Bike,
-  MapPin
+  MapPin,
+  Tag
 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
@@ -33,6 +33,21 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const pathname = usePathname()
 
+  // Load sidebar state from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('adminSidebarCollapsed')
+    if (saved !== null) {
+      setSidebarCollapsed(saved === 'true')
+    }
+  }, [])
+
+  // Save sidebar state to localStorage when it changes
+  const toggleSidebar = () => {
+    const newState = !sidebarCollapsed
+    setSidebarCollapsed(newState)
+    localStorage.setItem('adminSidebarCollapsed', String(newState))
+  }
+
   const handleLogout = async () => {
     await signOut({ redirect: false })
     router.push('/')
@@ -45,7 +60,7 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
     { icon: MapPin,          label: 'Areas',     href: '/admin/areas'     },
     { icon: Users,           label: 'Users',     href: '/admin/users'     },
     { icon: MenuIcon,        label: 'Menu',      href: '/admin/menu'      },
-    { icon: Settings,        label: 'Settings',  href: '/admin/settings'  },
+    { icon: Tag,             label: 'Deals',     href: '/admin/deals'     },
   ]
 
   // Loading state
@@ -117,7 +132,7 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              onClick={toggleSidebar}
               className="p-2"
             >
               {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}

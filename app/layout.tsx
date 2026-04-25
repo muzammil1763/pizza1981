@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Providers } from '@/components/providers'
+import { PageLoader } from '@/components/page-loader'
+import { NavigationLoader } from '@/components/navigation-loader'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -25,6 +27,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-background">
       <body className="font-sans antialiased" suppressHydrationWarning>
+        <PageLoader />
+        <NavigationLoader />
         <Providers>
           {children}
         </Providers>

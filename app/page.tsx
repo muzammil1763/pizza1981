@@ -49,7 +49,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex items-center px-6 overflow-hidden bg-[#0d1b2a]">
+      <section className="relative pt-20 pb-8 flex items-center px-6 overflow-hidden bg-[#0d1b2a]">
         <div className="absolute inset-0 opacity-30">
           <Image src="/banner-bg-1.png" alt="Hero Banner" fill className="object-cover" priority />
         </div>
@@ -69,17 +69,17 @@ export default function HomePage() {
           </div>
         </div>
         
-        <div className="max-w-7xl mx-auto w-full relative z-10 py-20">
+        <div className="max-w-7xl mx-auto w-full relative z-10 py-8">
           <div className="max-w-3xl text-center mx-auto">
-            <h1 className="text-6xl md:text-8xl font-extrabold text-white leading-tight mb-6">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight mb-4">
               QUALITY <span className="text-[#f5a623]">FOODS</span>
             </h1>
-            <p className="text-[#f5a623] text-xl md:text-2xl font-semibold tracking-[0.3em] uppercase mb-12">
+            <p className="text-[#f5a623] text-sm md:text-base font-semibold tracking-[0.3em] uppercase mb-6">
               HEALTHY FOOD FOR HEALTHY BODY
             </p>
             
             {/* Pizza Image */}
-            <div className="relative w-full max-w-2xl mx-auto mb-12">
+            <div className="relative w-full max-w-xs mx-auto mb-6">
               <div className="relative aspect-square">
                 <Image 
                   src="/pizza-banner-1.png" 
@@ -89,11 +89,11 @@ export default function HomePage() {
                   priority
                 />
                 {/* Floating basil leaves */}
-                <div className="absolute -left-10 top-20 animate-float">
-                  <span className="text-5xl">🌿</span>
+                <div className="absolute -left-6 top-16 animate-float">
+                  <span className="text-3xl">🌿</span>
                 </div>
-                <div className="absolute -right-10 top-32 animate-float-delayed">
-                  <span className="text-6xl">🌿</span>
+                <div className="absolute -right-6 top-24 animate-float-delayed">
+                  <span className="text-4xl">🌿</span>
                 </div>
               </div>
             </div>

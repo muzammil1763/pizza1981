@@ -7,6 +7,7 @@ import { AdminLayout } from '@/components/admin-layout'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { RefreshCw, Eye, Bike } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface Rider { id: string; name: string; phone: string; available: boolean }
 interface Order {
@@ -52,23 +53,61 @@ export default function AdminOrdersPage() {
     setRiders(data.riders || [])
   }
 
+  // Get available riders for a specific order
+  const getAvailableRiders = (currentOrderId: string) => {
+    // Get all rider IDs that are currently assigned to non-delivered orders (excluding current order)
+    const busyRiderIds = orders
+      .filter(order => 
+        order.id !== currentOrderId && // Exclude current order
+        order.rider && // Has a rider assigned
+        order.status !== 'DELIVERED' && // Not delivered yet
+        order.status !== 'CANCELLED' // Not cancelled
+      )
+      .map(order => order.rider!.id)
+
+    // Filter out busy riders
+    return riders.filter(rider => !busyRiderIds.includes(rider.id))
+  }
+
   const updateOrder = async (orderId: string, patch: { status?: string; riderId?: string | null }) => {
-    // Optimistic update
-    setOrders(prev => prev.map(o => {
-      if (o.id !== orderId) return o
-      if (patch.status) return { ...o, status: patch.status }
-      if (patch.riderId !== undefined) {
-        const rider = patch.riderId ? riders.find(r => r.id === patch.riderId) || null : null
-        return { ...o, rider: rider ? { id: rider.id, name: rider.name, phone: rider.phone } : null }
+    try {
+      // Persist to DB first
+      const res = await fetch(`/api/admin/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patch),
+      })
+
+      if (!res.ok) {
+        console.error('Failed to update order')
+        toast.error('Failed to update order')
+        return
       }
-      return o
-    }))
-    // Persist to DB
-    await fetch(`/api/admin/orders/${orderId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(patch),
-    })
+
+      const data = await res.json()
+      
+      // Update local state with the response from server
+      setOrders(prev => prev.map(o => {
+        if (o.id !== orderId) return o
+        return data.order
+      }))
+
+      // Show success message
+      if (patch.status) {
+        toast.success(`Order status updated to ${patch.status}`)
+      }
+      if (patch.riderId !== undefined) {
+        if (patch.riderId) {
+          const rider = riders.find(r => r.id === patch.riderId)
+          toast.success(`Rider assigned: ${rider?.name || 'Unknown'}`)
+        } else {
+          toast.success('Rider unassigned')
+        }
+      }
+    } catch (error) {
+      console.error('Error updating order:', error)
+      toast.error('Error updating order')
+    }
   }
 
   if (session?.user?.role !== 'ADMIN' && session?.user?.email !== 'admin@pizza1981.com') {
@@ -142,7 +181,12 @@ export default function AdminOrdersPage() {
                           onChange={e => updateOrder(order.id, { riderId: e.target.value || null })}
                           className="text-xs border border-gray-200 rounded-lg px-2 py-1 max-w-[120px]">
                           <option value="">Unassigned</option>
-                          {riders.map(r => (
+                          {/* Show currently assigned rider even if busy */}
+                          {order.rider && !getAvailableRiders(order.id).find(r => r.id === order.rider!.id) && (
+                            <option key={order.rider.id} value={order.rider.id}>{order.rider.name} (Current)</option>
+                          )}
+                          {/* Show only available riders */}
+                          {getAvailableRiders(order.id).map(r => (
                             <option key={r.id} value={r.id}>{r.name}</option>
                           ))}
                         </select>

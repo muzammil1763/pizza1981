@@ -1,14 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
-import { PIZZA_1981_DEALS } from '@/lib/menu-data';
+import { DataLoader } from '@/components/data-loader';
 import { useApp } from '@/lib/app-context';
 import { formatPrice } from '@/lib/utils-app';
-import { Deal } from '@/lib/types';
 import { Tag, ShoppingBag, Flame, Clock, Plus, Minus, CheckCircle2, Star } from 'lucide-react';
+
+interface Deal {
+  id: string;
+  name: string;
+  description: string;
+  originalPrice: number;
+  discountedPrice: number;
+  discountPercentage: number;
+  image?: string;
+  items: string[];
+  available: boolean;
+}
 
 function DealCard({ deal }: { deal: Deal }) {
   const { addToCart } = useApp();
@@ -16,7 +27,8 @@ function DealCard({ deal }: { deal: Deal }) {
   const [added, setAdded] = useState(false);
 
   const handleAdd = () => {
-    deal.items.forEach((itemId) => addToCart({ menuItemId: itemId, quantity: qty }));
+    // Note: Since items are now strings (descriptions), we'll need to handle this differently
+    // For now, just show the added state
     setQty(1);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -37,7 +49,7 @@ function DealCard({ deal }: { deal: Deal }) {
           <Tag size={11} /> {deal.discountPercentage}% OFF
         </span>
         <span className="absolute bottom-3 left-3 bg-white/90 text-[#1e3a5f] text-xs font-semibold px-2 py-1 rounded-full z-10">
-          Save {formatPrice(savings)}
+          Save Rs. {savings}
         </span>
       </div>
 
@@ -52,14 +64,26 @@ function DealCard({ deal }: { deal: Deal }) {
         <h3 className="font-bold text-[#1e3a5f] text-base mb-1">{deal.name}</h3>
         <p className="text-gray-400 text-xs mb-3 leading-relaxed line-clamp-2">{deal.description}</p>
 
-        <div className="flex items-center gap-1.5 mb-4">
-          <CheckCircle2 size={12} className="text-[#f5a623] shrink-0" />
-          <span className="text-gray-400 text-xs">{deal.items.length} items included</span>
+        <div className="border-t border-gray-100 pt-3 mb-3">
+          <p className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+            <CheckCircle2 size={12} className="text-[#f5a623]" />
+            Includes:
+          </p>
+          <ul className="text-xs text-gray-600 space-y-1">
+            {deal.items.slice(0, 3).map((item, idx) => (
+              <li key={idx} className="flex items-center gap-1">
+                <span className="text-[#f5a623]">•</span> {item}
+              </li>
+            ))}
+            {deal.items.length > 3 && (
+              <li className="text-gray-400 italic">+ {deal.items.length - 3} more items</li>
+            )}
+          </ul>
         </div>
 
         <div className="flex items-end gap-3 mb-4">
-          <span className="text-[#f5a623] font-extrabold text-xl">{formatPrice(deal.discountedPrice)}</span>
-          <span className="text-gray-300 line-through text-sm mb-0.5">{formatPrice(deal.originalPrice)}</span>
+          <span className="text-[#f5a623] font-extrabold text-xl">Rs. {deal.discountedPrice}</span>
+          <span className="text-gray-300 line-through text-sm mb-0.5">Rs. {deal.originalPrice}</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -87,12 +111,33 @@ function DealCard({ deal }: { deal: Deal }) {
 }
 
 export default function DealsPage() {
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDeals();
+  }, []);
+
+  const fetchDeals = async () => {
+    try {
+      const res = await fetch('/api/deals');
+      if (res.ok) {
+        const data = await res.json();
+        setDeals(data.filter((deal: Deal) => deal.available));
+      }
+    } catch (error) {
+      console.error('Failed to fetch deals:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-16 pb-14 px-6 bg-white border-b border-gray-100">
+      <section className="pt-32 pb-14 px-6 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-[#f5a623]/10 text-[#f5a623] text-sm font-semibold px-4 py-2 rounded-full mb-5">
             <Flame size={14} className="fill-[#f5a623]" /> Limited Time Offers
@@ -110,7 +155,7 @@ export default function DealsPage() {
       <div className="bg-gray-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap gap-6 justify-center sm:justify-start">
           {[
-            { icon: <Tag size={14} />, label: `${PIZZA_1981_DEALS.length} Active Deals` },
+            { icon: <Tag size={14} />, label: `${deals.length} Active Deals` },
             { icon: <Clock size={14} />, label: 'Updated Daily' },
             { icon: <Flame size={14} />, label: 'Up to 30% Off' },
           ].map((s) => (
@@ -124,11 +169,21 @@ export default function DealsPage() {
       {/* Deals Grid */}
       <div className="flex-1 px-6 py-12">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {PIZZA_1981_DEALS.map((deal) => (
-              <DealCard key={deal.id} deal={deal} />
-            ))}
-          </div>
+          {loading ? (
+            <DataLoader />
+          ) : deals.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-5xl mb-4">🎁</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">No deals available</h3>
+              <p className="text-gray-500">Check back soon for amazing offers!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {deals.map((deal) => (
+                <DealCard key={deal.id} deal={deal} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

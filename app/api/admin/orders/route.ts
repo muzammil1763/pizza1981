@@ -14,6 +14,13 @@ export async function GET() {
             email: true
           }
         },
+        rider: {
+          select: {
+            id: true,
+            name: true,
+            phone: true
+          }
+        },
         items: {
           include: {
             menuItem: {

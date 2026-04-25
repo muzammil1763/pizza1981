@@ -9,6 +9,14 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Mail, Phone, MapPin, Clock } from 'lucide-react'
 
+const WaveDown = ({ fill }: { fill: string }) => (
+  <div className="absolute bottom-0 left-0 right-0 leading-none">
+    <svg viewBox="0 0 1440 90" preserveAspectRatio="none" className="w-full h-[90px] block">
+      <path d="M0,45 C180,90 360,0 540,45 C720,90 900,0 1080,45 C1260,90 1380,20 1440,45 L1440,90 L0,90 Z" fill={fill} />
+    </svg>
+  </div>
+);
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
@@ -48,6 +56,7 @@ export default function ContactPage() {
           <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3">Contact <span className="text-[#f5a623]">Us</span></h1>
           <p className="text-white/70 text-base max-w-md mx-auto">We'd love to hear from you — reach out for orders, feedback or anything else.</p>
         </div>
+        <WaveDown fill="#ffffff" />
       </section>
 
       <main className="flex-1 p-4 md:p-8">

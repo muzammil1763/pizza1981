@@ -15,6 +15,7 @@ interface User {
   phone: string | null
   address: string | null
   role: string
+  userType: string
   createdAt: string
   _count: {
     orders: number
@@ -118,6 +119,7 @@ export default function AdminUsersPage() {
                   <th className="px-6 py-4 text-left font-bold">Name</th>
                   <th className="px-6 py-4 text-left font-bold">Email</th>
                   <th className="px-6 py-4 text-left font-bold">Phone</th>
+                  <th className="px-6 py-4 text-left font-bold">Type</th>
                   <th className="px-6 py-4 text-left font-bold">Orders</th>
                   <th className="px-6 py-4 text-left font-bold">Total Spent</th>
                   <th className="px-6 py-4 text-left font-bold">Actions</th>
@@ -138,6 +140,15 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="px-6 py-4 text-sm text-muted-foreground">{user.email}</td>
                     <td className="px-6 py-4 text-sm">{user.phone || 'N/A'}</td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 text-xs rounded-full font-semibold ${
+                        user.userType === 'GUEST' 
+                          ? 'bg-orange-100 text-orange-800' 
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {user.userType}
+                      </span>
+                    </td>
                     <td className="px-6 py-4">
                       <span className="px-3 py-1 rounded-full bg-accent/20 text-accent font-semibold">
                         {user._count.orders}
